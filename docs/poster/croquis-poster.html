@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="gl">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Croquis Póster — GuideGuard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      background: #dde1ea;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #1a1a2e;
+      overflow-x: hidden
+    }
+
+    .meta {
+      max-width: 1400px;
+      width: 100%;
+      margin-bottom: 14px;
+      background: #fff8e1;
+      border: 2px dashed #f0a500;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 12px;
+      color: #5a4000;
+      line-height: 1.6
+    }
+
+    .meta strong {
+      color: #c87000
+    }
+
+    .poster-scaler {
+      transform-origin: top center;
+      width: 1400px
+    }
+
+    .poster {
+      background: #fff;
+      width: 1400px;
+      min-height: 900px;
+      position: relative;
+      border-radius: 6px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, .22);
+      display: flex;
+      flex-direction: column
+    }
+
+    /* corners */
+    .cdot {
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      pointer-events: none;
+      z-index: 1
+    }
+
+    .ctlx {
+      top: 0;
+      left: 0
+    }
+
+    .ctrx {
+      top: 0;
+      right: 0;
+      transform: scaleX(-1)
+    }
+
+    .cblx {
+      bottom: 0;
+      left: 0;
+      transform: scaleY(-1)
+    }
+
+    .cbrx {
+      bottom: 0;
+      right: 0;
+      transform: scale(-1, -1)
+    }
+
+    /* HEADER */
+    .hdr {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 18px 150px 12px;
+      position: relative;
+      z-index: 2
+    }
+
+    .hlogo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1B4EA8, #2ebfbf);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 3px 12px rgba(27, 78, 168, .35);
+      flex-shrink: 0
+    }
+
+    .htitle {
+      font-size: 54px;
+      font-weight: 900;
+      color: #1B4EA8;
+      letter-spacing: -1px;
+      line-height: 1
+    }
+
+    .htitle span {
+      color: #2ebfbf
+    }
+
+    .htagline {
+      font-size: 14px;
+      color: #666;
+      font-style: italic;
+      margin-top: 3px;
+      text-align: center
+    }
+
+    .hdivider {
+      height: 3px;
+      background: linear-gradient(90deg, transparent 5%, #1B4EA8 20%, #2ebfbf 50%, #1B4EA8 80%, transparent 95%);
+      margin: 0 50px;
+      border-radius: 2px;
+      opacity: .55
+    }
+
+    /* BODY */
+    .body {
+      display: flex;
+      flex: 1;
+      padding: 14px 40px 12px;
+      gap: 18px;
+      position: relative;
+      z-index: 2
+    }
+
+    .col-l {
+      width: 255px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px
+    }
+
+    .col-c {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .col-r {
+      width: 255px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px
+    }
+
+    /* cards */
+    .card {
+      border-radius: 12px;
+      padding: 13px 14px
+    }
+
+    .card-red {
+      background: #fff5f5;
+      border-left: 4px solid #d93030
+    }
+
+    .card-blue {
+      background: #f2f5ff;
+      border-left: 4px solid #1B4EA8
+    }
+
+    .card-teal {
+      background: #f0fffe;
+      border-left: 4px solid #2ebfbf
+    }
+
+    .card-gray {
+      background: #f8f9fb;
+      border-left: 4px solid #8899bb
+    }
+
+    .slabel {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 5px
+    }
+
+    .slabel-red {
+      color: #d93030
+    }
+
+    .slabel-blue {
+      color: #1B4EA8
+    }
+
+    .slabel-teal {
+      color: #2ebfbf
+    }
+
+    .slabel-gray {
+      color: #556
+    }
+
+    .stitle {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 7px;
+      line-height: 1.2
+    }
+
+    .btext {
+      font-size: 12px;
+      color: #444;
+      line-height: 1.55
+    }
+
+    .btext strong {
+      color: #1B4EA8
+    }
+
+    /* PIE CHART */
+    .pie-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 10px
+    }
+
+    .pie-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #333
+    }
+
+    .leg-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    /* SOA grid */
+    .soa-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin-top: 6px
+    }
+
+    .soa-item {
+      background: #fff;
+      border-radius: 8px;
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border: 1.5px solid #e0e6f0
+    }
+
+    .soa-icon {
+      font-size: 18px;
+      flex-shrink: 0
+    }
+
+    .soa-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1a1a2e;
+      line-height: 1.2
+    }
+
+    .soa-sub {
+      font-size: 10px;
+      color: #888
+    }
+
+    .badge-bad {
+      background: #fdecea;
+      color: #c03030;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 9px;
+      font-weight: 700
+    }
+
+    .badge-good {
+      background: #e6f9e6;
+      color: #1a7a1a;
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 9px;
+      font-weight: 700
+    }
+
+    /* ── CENTER ARCHITECTURE DIAGRAM ── */
+    .arch-diagram {
+      background: linear-gradient(160deg, #e8f0ff 0%, #e8fcfb 100%);
+      border-radius: 14px;
+      padding: 16px 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column
+    }
+
+    .arch-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #1B4EA8;
+      margin-bottom: 14px;
+      text-align: center
+    }
+
+    /* main flow row */
+    .flow-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      width: 100%
+    }
+
+    /* generic node */
+    .fn {
+      background: #fff;
+      border-radius: 10px;
+      border: 2px solid #ccd8f0;
+      text-align: center;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(27, 78, 168, .09)
+    }
+
+    .fn-icon {
+      font-size: 24px
+    }
+
+    .fn-lbl {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #1B4EA8;
+      margin-top: 3px;
+      line-height: 1.2
+    }
+
+    .fn-sub {
+      font-size: 9px;
+      color: #888;
+      margin-top: 2px;
+      line-height: 1.3
+    }
+
+    .fn.hl {
+      border-color: #1B4EA8;
+      background: #f0f4ff
+    }
+
+    .fn.alarm {
+      border-color: #d93030;
+      background: #fff5f5
+    }
+
+    .fn.coord {
+      border-color: #2ebfbf;
+      background: #f0fffe;
+      min-width: 130px
+    }
+
+    /* arrow connector */
+    .arr {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6px;
+      flex-shrink: 0;
+      gap: 2px
+    }
+
+    .arr-line {
+      width: 38px;
+      height: 2px;
+      background: #1B4EA8;
+      opacity: .4;
+      position: relative
+    }
+
+    .arr-line::after {
+      content: '▶';
+      position: absolute;
+      right: -7px;
+      top: -6px;
+      font-size: 11px;
+      color: #1B4EA8;
+      opacity: .6
+    }
+
+    .arr-lbl {
+      font-size: 8.5px;
+      color: #888;
+      text-align: center;
+      max-width: 52px;
+      line-height: 1.2;
+      white-space: nowrap
+    }
+
+    .arr-lbl.ble {
+      color: #2ebfbf;
+      font-weight: 700
+    }
+
+    .arr-lbl.mqtt {
+      color: #1B4EA8;
+      font-weight: 700
+    }
+
+    .arr-lbl.alarm-lbl {
+      color: #d93030;
+      font-weight: 700
+    }
+
+    /* DOOR / ARCH visual */
+    .door-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 140px
+    }
+
+    .door-frame {
+      display: flex;
+      align-items: stretch;
+      width: 120px;
+      height: 80px;
+      position: relative
+    }
+
+    .door-post {
+      width: 13px;
+      background: #1B4EA8;
+      border-radius: 4px 4px 0 0
+    }
+
+    .door-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 13px;
+      background: #1B4EA8;
+      border-radius: 4px 4px 0 0
+    }
+
+    .door-space {
+      flex: 1;
+      background: rgba(255, 255, 255, .6);
+      border-bottom: none;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .door-inner {
+      font-size: 20px
+    }
+
+    .esp-tag {
+      background: #2ebfbf;
+      color: #fff;
+      font-size: 7.5px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 3px;
+      position: absolute
+    }
+
+    .esp-left {
+      left: -2px;
+      top: 18px;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      padding: 4px 2px
+    }
+
+    .esp-right {
+      right: -2px;
+      top: 18px;
+      writing-mode: vertical-rl;
+      padding: 4px 2px
+    }
+
+    .antenna-left {
+      position: absolute;
+      left: -10px;
+      top: -14px;
+      font-size: 13px;
+      transform: rotate(-20deg)
+    }
+
+    .antenna-right {
+      position: absolute;
+      right: -10px;
+      top: -14px;
+      font-size: 13px;
+      transform: rotate(20deg)
+    }
+
+    .door-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      color: #1B4EA8;
+      margin-top: 5px;
+      text-align: center;
+      line-height: 1.3
+    }
+
+    .door-sublbl {
+      font-size: 8.5px;
+      color: #888;
+      text-align: center
+    }
+
+    /* coordinator box */
+    .coord-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px
+    }
+
+    .algo-pill {
+      background: #1B4EA8;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: .5px
+    }
+
+    .coord-outputs {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 4px;
+      width: 100%
+    }
+
+    .coord-out {
+      background: #fff;
+      border-radius: 7px;
+      padding: 5px 7px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 600;
+      border: 1.5px solid #e0e8f5
+    }
+
+    .coord-out.out-dash {
+      border-color: #1B4EA8;
+      color: #1B4EA8
+    }
+
+    .coord-out.out-alarm {
+      border-color: #d93030;
+      color: #d93030
+    }
+
+    /* DASHBOARD MOCKUP */
+    .dash-ph {
+      background: #1a2540;
+      border-radius: 8px;
+      padding: 8px;
+      width: 100%
+    }
+
+    .dash-bar {
+      background: #243060;
+      border-radius: 4px;
+      height: 10px;
+      margin-bottom: 5px;
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      padding: 0 5px
+    }
+
+    .dash-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%
+    }
+
+    .dash-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px
+    }
+
+    .dash-widget {
+      background: #243060;
+      border-radius: 4px;
+      padding: 5px 6px
+    }
+
+    .dash-wlabel {
+      font-size: 7px;
+      color: #8899cc;
+      text-transform: uppercase;
+      letter-spacing: 1px
+    }
+
+    .dash-wval {
+      font-size: 13px;
+      font-weight: 800;
+      color: #2ebfbf;
+      margin-top: 1px
+    }
+
+    .dash-wval.alert {
+      color: #e05252
+    }
+
+    .dash-wval.ok {
+      color: #4ec94e
+    }
+
+    .dash-row {
+      display: flex;
+      gap: 4px;
+      margin-top: 4px
+    }
+
+    .dash-event {
+      background: #243060;
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-size: 7.5px;
+      color: #ccd;
+      flex: 1
+    }
+
+    .dash-event span {
+      color: #e05252;
+      font-weight: 700
+    }
+
+    /* checklist */
+    .chk-list {
+      list-style: none;
+      margin-top: 6px
+    }
+
+    .chk-list li {
+      display: flex;
+      gap: 6px;
+      font-size: 11.5px;
+      color: #333;
+      margin-bottom: 6px;
+      line-height: 1.35;
+      align-items: flex-start
+    }
+
+    .ck {
+      color: #1a8a1a;
+      font-weight: 900;
+      font-size: 13px;
+      flex-shrink: 0
+    }
+
+    /* hardware */
+    .hw-ph {
+      background: #f0f0f4;
+      border-radius: 8px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 10px;
+      color: #888;
+      border: 1.5px dashed #ccc;
+      margin: 6px 0
+    }
+
+    .hw-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap
+    }
+
+    .pill {
+      background: #fff;
+      border: 1.5px solid #c0cef0;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 10.5px;
+      color: #1B4EA8;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px
+    }
+
+    .pill-green {
+      border-color: #a0d0a0;
+      color: #1a6a1a
+    }
+
+    /* METRICS */
+    .metrics {
+      display: flex;
+      gap: 12px;
+      padding: 10px 40px;
+      border-top: 2px solid #e8ecf5;
+      position: relative;
+      z-index: 2;
+      background: #f8faff
+    }
+
+    .met-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #1B4EA8;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      flex-shrink: 0;
+      align-self: center
+    }
+
+    .met-cards {
+      display: flex;
+      gap: 10px;
+      flex: 1
+    }
+
+    .met-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 14px;
+      flex: 1;
+      border-top: 3px solid #1B4EA8;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(27, 78, 168, .08)
+    }
+
+    .met-card.teal {
+      border-top-color: #2ebfbf
+    }
+
+    .met-card.green {
+      border-top-color: #2aa02a
+    }
+
+    .met-card.orange {
+      border-top-color: #e07820
+    }
+
+    .met-val {
+      font-size: 28px;
+      font-weight: 900;
+      color: #1B4EA8;
+      line-height: 1
+    }
+
+    .met-val.teal {
+      color: #2ebfbf
+    }
+
+    .met-val.green {
+      color: #2aa02a
+    }
+
+    .met-val.orange {
+      color: #e07820
+    }
+
+    .met-name {
+      font-size: 10px;
+      color: #666;
+      margin-top: 3px;
+      line-height: 1.3
+    }
+
+    .met-note {
+      font-size: 9px;
+      color: #aaa;
+      font-style: italic;
+      margin-top: 2px
+    }
+
+    /* FOOTER */
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 52px 10px;
+      border-top: 2px solid #e8ecf5;
+      z-index: 2;
+      position: relative
+    }
+
+    .flogo {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .flogo-box {
+      width: 36px;
+      height: 36px;
+      background: #1B4EA8;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 17px
+    }
+
+    .flogo-text {
+      font-size: 11px;
+      line-height: 1.4;
+      color: #333
+    }
+
+    .flogo-text strong {
+      display: block;
+      font-size: 12px;
+      color: #1B4EA8
+    }
+
+    .fpartner {
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .fpartner-circle {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #1B4EA8, #2ebfbf);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px
+    }
+
+    .fpartner-text {
+      font-size: 13px;
+      font-weight: 900;
+      color: #1B4EA8;
+      line-height: 1.15
+    }
+
+    .fpartner-text span {
+      color: #2ebfbf
+    }
+
+    .fpartner-text small {
+      font-size: 9px;
+      font-weight: 400;
+      color: #888;
+      display: block
+    }
+
+    .fcenter {
+      font-size: 10px;
+      color: #bbb;
+      font-style: italic;
+      text-align: center
+    }
+
+    .note {
+      background: #fffbe6;
+      border: 1.5px dashed #e0b000;
+      border-radius: 6px;
+      padding: 4px 9px;
+      font-size: 9.5px;
+      color: #7a5500;
+      margin-top: 6px;
+      font-style: italic
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="poster-scaler">
+    <div class="poster">
+
+      <!-- corners -->
+      <div class="cdot ctlx"><svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="cg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="scale(130)">
+              <stop offset="0%" stop-color="#1B4EA8" stop-opacity=".3" />
+              <stop offset="100%" stop-color="#1B4EA8" stop-opacity="0" />
+            </radialGradient>
+          </defs>
+          <rect width="130" height="130" fill="url(#cg)" />
+        </svg></div>
+      <div class="cdot ctrx"><svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+          <rect width="130" height="130" fill="url(#cg)" />
+        </svg></div>
+      <div class="cdot cblx"><svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+          <rect width="130" height="130" fill="url(#cg)" />
+        </svg></div>
+      <div class="cdot cbrx"><svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+          <rect width="130" height="130" fill="url(#cg)" />
+        </svg></div>
+
+      <!-- HEADER -->
+      <div class="hdr">
+        <div class="hlogo">🛡️</div>
+        <div>
+          <div class="htitle">Guide<span>Guard</span></div>
+          <div class="htagline">Seguridade intelixente contra o roubo de audioguías en museos</div>
+        </div>
+      </div>
+      <div class="hdivider"></div>
+
+      <!-- BODY -->
+      <div class="body">
+
+        <!-- ═══ LEFT ═══ -->
+        <div class="col-l">
+          <div class="card card-red">
+            <div class="slabel slabel-red">⚠ O PROBLEMA</div>
+            <div class="stitle">Os museos perden audioguías</div>
+            <div class="btext">Empresas como <strong>GVAM</strong> prestan smartphones Android como audioguías. Os
+              visitantes marchan co dispositivo —na maioría dos casos, por esquecemento.</div>
+            <div class="pie-wrap">
+              <svg width="90" height="90" viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e8ecf5" stroke-width="3.2" />
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#1B4EA8" stroke-width="3.2"
+                  stroke-dasharray="80 20" stroke-dashoffset="25" />
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e07820" stroke-width="3.2"
+                  stroke-dasharray="20 80" stroke-dashoffset="-55" />
+                <text x="18" y="20" text-anchor="middle" font-size="5.5" font-weight="900" fill="#1a1a2e">FURTOS</text>
+              </svg>
+              <div class="pie-legend">
+                <div class="leg-item">
+                  <div class="leg-dot" style="background:#1B4EA8"></div><span><strong
+                      style="color:#1B4EA8;font-size:14px">80%</strong> involuntarios<br><span
+                      style="font-size:10px;color:#888">esquecemento</span></span>
+                </div>
+                <div class="leg-item">
+                  <div class="leg-dot" style="background:#e07820"></div><span><strong
+                      style="color:#e07820;font-size:14px">20%</strong> dolosos<br><span
+                      style="font-size:10px;color:#888">intención de roubo</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-gray" style="flex:1">
+            <div class="slabel slabel-gray">🔍 ALTERNATIVAS EXISTENTES</div>
+            <div class="stitle">Por que non funcionan?</div>
+            <div class="soa-grid">
+              <div class="soa-item">
+                <div class="soa-icon">🔊</div>
+                <div>
+                  <div class="soa-name">Arcos EAS</div>
+                  <div class="soa-sub">Acustomagnéticos</div><span class="badge-bad">70% fallos</span>
+                </div>
+              </div>
+              <div class="soa-item">
+                <div class="soa-icon">📡</div>
+                <div>
+                  <div class="soa-name">RFID</div>
+                  <div class="soa-sub">Radiofrecuencia</div><span class="badge-bad">Pasivo, sen alerta</span>
+                </div>
+              </div>
+              <div class="soa-item">
+                <div class="soa-icon">🛰️</div>
+                <div>
+                  <div class="soa-name">GPS / Wi-Fi</div>
+                  <div class="soa-sub">Xeolocalización</div><span class="badge-bad">Sen cobertura interior</span>
+                </div>
+              </div>
+              <div class="soa-item" style="border-color:#2ebfbf;background:#f0fffe">
+                <div class="soa-icon">📶</div>
+                <div>
+                  <div class="soa-name">BLE</div>
+                  <div class="soa-sub">A nosa proposta</div><span class="badge-good">✓ Solución</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ CENTER ═══ -->
+        <div class="col-c">
+          <div class="arch-diagram">
+            <div class="arch-title">⚙ Arquitectura do sistema</div>
+
+            <!-- FLOOR PLAN SCENE (top-down view based on sketch) -->
+            <div style="display:flex;gap:10px;flex:1;align-items:stretch">
+
+              <!-- LEFT: logical flow strip -->
+              <div
+                style="display:flex;flex-direction:column;justify-content:space-around;align-items:center;padding:0 4px;gap:6px;min-width:110px">
+                <!-- Audioguia node -->
+                <div class="fn hl" style="width:100%">
+                  <div class="fn-icon">📱</div>
+                  <div class="fn-lbl">Audioguía<br>Android (foto)</div>
+                  <div class="fn-sub">App en<br>modo kiosko</div>
+                </div>
+                <!-- BLE arrow down -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-size:9px;color:#2ebfbf;font-weight:700">BLE advertising</span>
+                  <span style="font-size:10px;color:#2ebfbf">↓</span>
+                  <span style="font-size:9px;color:#888">beacon + UUID</span>
+                </div>
+                <!-- ESP32 node -->
+                <div class="fn" style="width:100%;border-color:#2ebfbf;background:#f0fffe">
+                  <div style="font-size:11px">📡</div>
+                  <div class="fn-lbl" style="color:#2ebfbf">Nodo 1 + Nodo 2<br>(ESP32)</div>
+                  <div class="fn-sub">Reciben e reenvían</div>
+                </div>
+                <!-- WiFi arrow down -->
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <span style="font-size:9px;color:#1B4EA8;font-weight:700">Wi-Fi / MQTT</span>
+                  <span style="font-size:10px;color:#1B4EA8">↓</span>
+                </div>
+                <!-- Coordinator node -->
+                <div class="fn coord" style="width:100%">
+                  <div class="fn-icon">🖥️</div>
+                  <div class="fn-lbl">Coordinador<br>Windows / Linux</div>
+                  <div style="margin:3px 0">
+                    <div class="algo-pill">Algoritmo</div>
+                  </div>
+                  <div class="fn-sub">Decide se hai<br>saída non autorizada</div>
+                </div>
+                <!-- outputs -->
+                <div style="display:flex;gap:5px;width:100%">
+                  <div
+                    style="flex:1;background:#f0fffe;border:1.5px solid #2ebfbf;border-radius:7px;padding:4px;text-align:center">
+                    <div style="font-size:12px">📊</div>
+                    <div style="font-size:8.5px;font-weight:700;color:#2ebfbf">Dashboard</div>
+                  </div>
+                  <div
+                    style="flex:1;background:#fff5f5;border:1.5px solid #d93030;border-radius:7px;padding:4px;text-align:center">
+                    <div style="font-size:12px">🚨</div>
+                    <div style="font-size:8.5px;font-weight:700;color:#d93030">Alarma→📱</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT: floor plan SVG scene -->
+              <div
+                style="flex:1;background:rgba(255,255,255,0.6);border-radius:10px;border:1.5px solid #d0dcf5;padding:8px;display:flex;flex-direction:column;gap:4px">
+                <div
+                  style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:#1B4EA8;text-align:center;text-transform:uppercase">
+                  Vista de planta (esquema)</div>
+                <svg viewBox="0 0 320 200" style="width:100%;height:auto" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Museum interior -->
+                  <rect x="10" y="10" width="220" height="180" rx="4" fill="#eef2ff" stroke="#1B4EA8"
+                    stroke-width="2.5" />
+                  <!-- MUSEO label -->
+                  <text x="110" y="110" text-anchor="middle" font-size="22" font-weight="900" fill="#1B4EA8"
+                    opacity="0.18">MUSEO</text>
+                  <!-- Wall gap = door opening in right wall -->
+                  <!-- top wall segment above door -->
+                  <rect x="228" y="10" width="5" height="62" fill="#1B4EA8" />
+                  <!-- bottom wall segment below door -->
+                  <rect x="228" y="128" width="5" height="62" fill="#1B4EA8" />
+                  <!-- ARCO label -->
+                  <text x="240" y="100" text-anchor="middle" font-size="7" font-weight="700" fill="#1B4EA8">ARCO</text>
+                  <!-- door opening indicator -->
+                  <line x1="233" y1="72" x2="233" y2="128" stroke="#1B4EA8" stroke-width="1" stroke-dasharray="3,2" />
+                  <!-- NODO 1 (top of door frame) -->
+                  <rect x="224" y="58" width="18" height="18" rx="3" fill="#2ebfbf" stroke="#1B4EA8" stroke-width="1" />
+                  <text x="233" y="68" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">ESP</text>
+                  <text x="233" y="74" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">N1</text>
+                  <!-- Antenna N1 -->
+                  <line x1="242" y1="62" x2="252" y2="52" stroke="#2ebfbf" stroke-width="1.5" />
+                  <text x="258" y="52" text-anchor="start" font-size="7" fill="#2ebfbf" font-weight="700">Nodo 1</text>
+                  <!-- NODO 2 (bottom of door frame) -->
+                  <rect x="224" y="124" width="18" height="18" rx="3" fill="#2ebfbf" stroke="#1B4EA8"
+                    stroke-width="1" />
+                  <text x="233" y="134" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">ESP</text>
+                  <text x="233" y="140" text-anchor="middle" font-size="5.5" font-weight="700" fill="white">N2</text>
+                  <!-- Antenna N2 -->
+                  <line x1="242" y1="138" x2="252" y2="148" stroke="#2ebfbf" stroke-width="1.5" />
+                  <text x="258" y="152" text-anchor="start" font-size="7" fill="#2ebfbf" font-weight="700">Nodo 2</text>
+                  <!-- COORDINATOR box (top-right inside museum) -->
+                  <rect x="140" y="15" width="72" height="32" rx="4" fill="#1B4EA8" />
+                  <text x="176" y="27" text-anchor="middle" font-size="6.5" font-weight="700"
+                    fill="white">COORDINADOR</text>
+                  <text x="176" y="38" text-anchor="middle" font-size="5.5" fill="#a0c8ff">Dashboard + Algoritmo</text>
+                  <!-- WiFi lines: coordinator <-> nodo1 (yellow/dashed) -->
+                  <line x1="212" y1="31" x2="232" y2="67" stroke="#f0c030" stroke-width="1.5" stroke-dasharray="4,2" />
+                  <!-- WiFi lines: coordinator <-> nodo2 -->
+                  <line x1="212" y1="40" x2="232" y2="124" stroke="#f0c030" stroke-width="1.5" stroke-dasharray="4,2" />
+                  <text x="196" y="58" font-size="6" fill="#c09000" font-weight="700">Wi-Fi</text>
+                  <!-- Audioguías (circles with BLE) inside museum -->
+                  <!-- device 1 -->
+                  <circle cx="60" cy="70" r="9" fill="white" stroke="#1B4EA8" stroke-width="1.2" />
+                  <text x="60" y="74" text-anchor="middle" font-size="8">📱</text>
+                  <text x="74" y="68" font-size="7" fill="#2ebfbf">)))</text>
+                  <!-- device 2 -->
+                  <circle cx="110" cy="150" r="9" fill="white" stroke="#1B4EA8" stroke-width="1.2" />
+                  <text x="110" y="154" text-anchor="middle" font-size="8">📱</text>
+                  <text x="124" y="148" font-size="7" fill="#2ebfbf">)))</text>
+                  <!-- device 3 (approaching arch) -->
+                  <circle cx="185" cy="100" r="9" fill="#fff8e1" stroke="#e07820" stroke-width="1.8" />
+                  <text x="185" y="104" text-anchor="middle" font-size="8">📱</text>
+                  <text x="199" y="98" font-size="8" fill="#2ebfbf" font-weight="700">&gt;&gt;</text>
+                  <text x="181" y="118" text-anchor="middle" font-size="6" fill="#e07820"
+                    font-weight="700">saíndo!</text>
+                  <!-- BLE waves from approaching device to nodes -->
+                  <line x1="194" y1="98" x2="228" y2="75" stroke="#2ebfbf" stroke-width="1" stroke-dasharray="3,2"
+                    opacity="0.7" />
+                  <line x1="194" y1="102" x2="228" y2="130" stroke="#2ebfbf" stroke-width="1" stroke-dasharray="3,2"
+                    opacity="0.7" />
+                  <!-- EXTERIOR label -->
+                  <text x="290" y="105" text-anchor="middle" font-size="8" font-weight="900" fill="#888"
+                    transform="rotate(90,290,105)">EXTERIOR</text>
+                  <!-- exit arrow -->
+                  <polygon points="260,95 275,100 260,105" fill="#1B4EA8" opacity="0.5" />
+                  <line x1="235" y1="100" x2="268" y2="100" stroke="#1B4EA8" stroke-width="1.5" opacity="0.5" />
+                  <!-- BLE label -->
+                  <text x="60" y="183" text-anchor="middle" font-size="7" fill="#2ebfbf" font-weight="700">BLE</text>
+                  <text x="110" y="183" text-anchor="middle" font-size="7" fill="#2ebfbf" font-weight="700">BLE</text>
+                  <text x="185" y="183" text-anchor="middle" font-size="6.5" fill="#e07820" font-weight="700">BLE →
+                    detección</text>
+                </svg>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ═══ RIGHT ═══ -->
+        <div class="col-r">
+          <div class="card card-teal" style="flex:1">
+            <div class="slabel slabel-teal">✅ A NOSA SOLUCIÓN</div>
+            <div class="stitle">Detección BLE de baixo custo</div>
+            <ul class="chk-list">
+              <li><span class="ck">✓</span><span><strong>100% software</strong> — sen modificar o hardware das
+                  audioguías</span></li>
+              <li><span class="ck">✓</span><span>Identificación <strong>unívoca</strong> de cada dispositivo (UUID de
+                  inventario)</span></li>
+              <li><span class="ck">✓</span><span>Funciona <strong>sen Wi-Fi</strong> no punto de saída (BLE directo ao
+                  ESP32)</span></li>
+              <li><span class="ck">✓</span><span>Alarma acústica automática no propio terminal</span></li>
+              <li><span class="ck">✓</span><span>Escalable a <strong>calquera recinto</strong> histórico sen obras nin
+                  cableado</span></li>
+              <li><span class="ck">✓</span><span>Trazabilidade completa do inventario en tempo real</span></li>
+            </ul>
+          </div>
+          <div class="card card-blue">
+            <div class="slabel slabel-blue">🔧 HARDWARE E CUSTO</div>
+            <div class="hw-ph">
+              <div style="font-size:22px">🔌</div>
+              <div>Foto real: ESP32 con antena</div>
+            </div>
+            <div class="hw-pills">
+              <div class="pill">📡 2x ESP32</div>
+              <div class="pill">📶 2x Antena</div>
+              <div class="pill pill-green">💶 ~50€ / arco</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /body -->
+
+      <!-- METRICS -->
+      <div class="metrics">
+        <div class="met-label">RESULTADOS</div>
+        <div class="met-cards">
+          <div class="met-card">
+            <div class="met-val">XX<span style="font-size:16px">%</span></div>
+            <div class="met-name">Taxa de detección</div>
+            <div class="met-note">N probas realizadas</div>
+          </div>
+          <div class="met-card teal">
+            <div class="met-val teal">X<span style="font-size:16px">%</span></div>
+            <div class="met-name">Falsos positivos</div>
+            <div class="met-note">Alarmas incorrectas</div>
+          </div>
+          <div class="met-card green">
+            <div class="met-val green">X<span style="font-size:16px">%</span></div>
+            <div class="met-name">Falsos negativos</div>
+            <div class="met-note">Saídas non detectadas</div>
+          </div>
+          <div class="met-card orange">
+            <div class="met-val orange">XX<span style="font-size:14px">ms</span></div>
+            <div class="met-name">Latencia media</div>
+            <div class="met-note">Detección → alerta</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer">
+        <div class="flogo">
+          <div class="flogo-box">🎓</div>
+          <div class="flogo-text"><strong>Escola de Enxeñaría de Telecomunicación</strong>Universidade de Vigo</div>
+        </div>
+        <div class="fpartner">
+          <div class="fpartner-text"><span>MECENAS</span><small>CONEXIÓNTeleco</small></div>
+          <div class="fpartner-circle">📱</div>
+        </div>
+      </div>
+
+    </div><!-- /poster -->
+  </div><!-- /poster-scaler -->
+
+  <script>
+    function scalePoster() {
+      var s = document.querySelector('.poster-scaler');
+      if (!s) return;
+      var sc = Math.min(1, (window.innerWidth - 50) / 1400);
+      s.style.transform = 'scale(' + sc + ')';
+      s.style.marginBottom = ((s.offsetHeight * sc) - s.offsetHeight) + 'px';
+    }
+    scalePoster();
+    window.addEventListener('resize', scalePoster);
+  </script>
+</body>
+
+</html>
